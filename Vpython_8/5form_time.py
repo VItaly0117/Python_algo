@@ -1,142 +1,93 @@
 from vpython import *
+from datetime import datetime
 
-# --- НАСТРОЙКИ ---
-scene.width = 1000
-scene.height = 800
-scene.title = "Chess: Clean & Simple"
-scene.background = color.gray(0.1)  # Темный фон, чтобы глаза не резало
-scene.center = vector(0, 0, 0)  # Камера смотрит в центр
-scene.camera.pos = vector(0, 10, 15)  # Удобный угол обзора
+# Настройка сцены
+scene.width = 800
+scene.height = 600
+scene.title = "Пример 5: Анимированные часы\n"
+scene.background = color.gray(0.3)
 
-# --- РАЗМЕРЫ ---
-SQ_SIZE = 2.0  # Размер клетки
-BOARD_H = 0.5  # Толщина доски
+# --- УПРАВЛЕНИЕ КАМЕРОЙ ---
+scene.userspin = True  # Вращение (правая кнопка)
+scene.userpan = True  # Перемещение (Shift + левая)
+scene.userzoom = True  # Зум (колесо)
+# -------------------------
 
+# --- Статические части часов ---
 
-# Поверхность доски будет на высоте Y = 0.
-# Сама доска (box) рисуется центром в -BOARD_H/2, чтобы верхняя грань была в 0.
+# Циферблат (плоский цилиндр)
+clock_face = cylinder(pos=vector(0, 0, -0.1),
+                      axis=vector(0, 0, 0.1),
+                      radius=5,
+                      color=color.white)
 
-# --- ФУНКЦИИ ГЕНЕРАЦИИ (возвращают объект) ---
+# Обод
+clock_rim = cylinder(pos=vector(0, 0, -0.15),
+                     axis=vector(0, 0, 0.2),
+                     radius=5.1,
+                     color=color.gray(0.7))
 
-def create_piece(type_char, x, z, color_team):
-    # type_char: P, R, N, B, Q, K
+# Центральная ось
+center_pin = cylinder(pos=vector(0, 0, 0),
+                      axis=vector(0, 0, 0.2),
+                      radius=0.1,
+                      color=color.red)
 
-    # Определяем высоту и форму
-    if type_char == 'P':  # Пешка
-        h = 1.5
-        # Пешка состоит из цилиндра и шара.
-        # Чтобы не париться с compound и смещением центров,
-        # просто рисуем их относительно базовой точки.
-        parts = [
-            cylinder(pos=vector(x, 0, z), axis=vector(0, h * 0.8, 0), radius=SQ_SIZE * 0.3, color=color_team),
-            sphere(pos=vector(x, h * 0.8, z), radius=SQ_SIZE * 0.25, color=color_team)
-        ]
-        return parts
+# Создаем 12 часовых меток
+for i in range(12):
+    angle = radians(i * 30)  # 30 градусов на каждый час
+    x = 4.5 * sin(angle)
+    y = 4.5 * cos(angle)
+    tick = box(pos=vector(x, y, 0),
+               size=vector(0.4, 0.4, 0.1),  # Маленькие кубики-метки
+               color=color.black)
 
-    elif type_char == 'R':  # Ладья
-        h = 2.0
-        parts = [
-            cylinder(pos=vector(x, 0, z), axis=vector(0, h, 0), radius=SQ_SIZE * 0.35, color=color_team),
-            # Зубцы сверху
-            cylinder(pos=vector(x, h, z), axis=vector(0, 0.2, 0), radius=SQ_SIZE * 0.4, color=color_team)
-        ]
-        return parts
+# --- Динамические части (стрелки) ---
+# Мы создаем их "стоя", указывая на 12 часов (по оси Y)
+# Мы будем вращать их оси (axis) в цикле
 
-    elif type_char == 'N':  # Конь
-        h = 2.0
-        parts = [
-            cylinder(pos=vector(x, 0, z), axis=vector(0, h * 0.4, 0), radius=SQ_SIZE * 0.35, color=color_team),
-            # Тело (коробка)
-            box(pos=vector(x, h * 0.7, z), size=vector(SQ_SIZE * 0.4, h * 0.6, SQ_SIZE * 0.4), color=color_team),
-            # Морда (смотрит вперед или назад) - просто блок сверху
-            box(pos=vector(x, h, z + 0.2), size=vector(SQ_SIZE * 0.3, SQ_SIZE * 0.4, SQ_SIZE * 0.6), color=color_team)
-        ]
-        return parts
+# Исходные оси (положение на 12:00)
+orig_s_axis = vector(0, 4.5, 0)
+orig_m_axis = vector(0, 4.0, 0)
+orig_h_axis = vector(0, 2.5, 0)
 
-    elif type_char == 'B':  # Слон
-        h = 2.3
-        parts = [
-            cylinder(pos=vector(x, 0, z), axis=vector(0, h * 0.8, 0), radius=SQ_SIZE * 0.3, color=color_team),
-            sphere(pos=vector(x, h * 0.8, z), radius=SQ_SIZE * 0.25, color=color_team),
-            sphere(pos=vector(x, h, z), radius=SQ_SIZE * 0.1, color=color_team)  # Пипка
-        ]
-        return parts
+# Примитив arrow (стрелка) отлично подходит
+second_hand = arrow(pos=vector(0, 0, 0.1),
+                    shaftwidth=0.05,
+                    color=color.red,
+                    axis=orig_s_axis)
 
-    elif type_char == 'Q':  # Королева
-        h = 2.6
-        parts = [
-            cylinder(pos=vector(x, 0, z), axis=vector(0, h * 0.9, 0), radius=SQ_SIZE * 0.35, color=color_team),
-            sphere(pos=vector(x, h * 0.9, z), radius=SQ_SIZE * 0.35, color=color_team)
-        ]
-        return parts
+minute_hand = arrow(pos=vector(0, 0, 0.05),
+                    shaftwidth=0.15,
+                    color=color.black,
+                    axis=orig_m_axis)
 
-    elif type_char == 'K':  # Король
-        h = 2.8
-        parts = [
-            cylinder(pos=vector(x, 0, z), axis=vector(0, h * 0.9, 0), radius=SQ_SIZE * 0.35, color=color_team),
-            box(pos=vector(x, h, z), size=vector(0.2, 0.6, 0.2), color=color_team),  # Крест верт
-            box(pos=vector(x, h, z), size=vector(0.5, 0.2, 0.2), color=color_team)  # Крест гориз
-        ]
-        return parts
+hour_hand = arrow(pos=vector(0, 0, 0),
+                  shaftwidth=0.25,
+                  color=color.black,
+                  axis=orig_h_axis)
 
+# --- Анимационный цикл ---
+while True:
+    rate(100)  # Ограничиваем цикл до 100 итераций в секунду
 
-# --- СОЗДАНИЕ ДОСКИ ---
-# Центрируем доску (сдвиг offset)
-offset = 3.5 * SQ_SIZE
+    # 1. Получаем текущее время
+    now = datetime.now()
 
-# Рисуем клетки
-for row in range(8):
-    for col in range(8):
-        # Координаты X и Z
-        x_pos = col * SQ_SIZE - offset
-        z_pos = row * SQ_SIZE - offset
+    # Добавляем доли, чтобы стрелки двигались плавно
+    s = now.second + now.microsecond / 1000000
+    m = now.minute + s / 60
+    h = (now.hour % 12) + m / 60
 
-        # Цвет клетки
-        if (row + col) % 2 == 0:
-            c = vector(0.8, 0.6, 0.4)  # Светлая
-        else:
-            c = vector(0.4, 0.2, 0.1)  # Темная
+    # 2. Рассчитываем углы
+    # Умножаем на -1, чтобы вращать по часовой стрелке
+    s_angle = -radians(s * 6)  # 360/60 = 6
+    m_angle = -radians(m * 6)  # 360/60 = 6
+    h_angle = -radians(h * 30)  # 360/12 = 30
 
-        # Рисуем бокс
-        # pos.y = -BOARD_H/2, значит верхняя грань ровно на y=0
-        box(pos=vector(x_pos, -BOARD_H / 2, z_pos),
-            size=vector(SQ_SIZE, BOARD_H, SQ_SIZE),
-            color=c)
-
-# Рамка вокруг
-box(pos=vector(0, -BOARD_H / 2 - 0.1, 0),
-    size=vector(SQ_SIZE * 8.5, BOARD_H, SQ_SIZE * 8.5),
-    color=vector(0.2, 0.1, 0.05))
-
-# --- РАССТАНОВКА ФИГУР ---
-
-# Схема (Белые внизу Z > 0 (условно), Черные вверху)
-# Используем стандартный порядок
-back_row = ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
-
-c_white = vector(1, 1, 0.9)
-c_black = vector(0.2, 0.2, 0.2)
-
-for i in range(8):
-    x = i * SQ_SIZE - offset
-
-    # --- БЕЛЫЕ ---
-    # Пешки (Ряд 1 -> Z координата ближе к нам)
-    # VPython Z axis: + на нас, - от нас.
-    # Пусть белые будут на Z = row 0 (дальний край) или row 7?
-    # Сделаем классику: Белые на row 0, 1. Черные на 6, 7.
-
-    z_white_back = 0 * SQ_SIZE - offset
-    z_white_pawn = 1 * SQ_SIZE - offset
-
-    create_piece(back_row[i], x, z_white_back, c_white)
-    create_piece('P', x, z_white_pawn, c_white)
-
-    # --- ЧЕРНЫЕ ---
-    z_black_pawn = 6 * SQ_SIZE - offset
-    z_black_back = 7 * SQ_SIZE - offset
-
-    create_piece(back_row[i], x, z_black_back, c_black)
-    create_piece('P', x, z_black_pawn, c_black)
-
-print("Готово. Фигуры стоят на доске.")
+    # 3. Обновляем оси стрелок
+    # Мы каждый раз вращаем ОРИГИНАЛЬНУЮ ось
+    # Это предотвращает накопление ошибок
+    second_hand.axis = rotate(orig_s_axis, angle=s_angle, axis=vector(0, 0, 1))
+    minute_hand.axis = rotate(orig_m_axis, angle=m_angle, axis=vector(0, 0, 1))
+    hour_hand.axis = rotate(orig_h_axis, angle=h_angle, axis=vector(0, 0, 1))
