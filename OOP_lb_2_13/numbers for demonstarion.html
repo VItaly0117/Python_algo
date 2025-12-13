@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестові дані для декораторів</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Прибирає подвійні рамки */
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тінь для краси */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #000;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Смугасті рядки */
+        }
+        tr:hover {
+            background-color: #e9e9e9; /* Підсвічування при наведенні */
+        }
+        .highlight {
+            font-weight: bold;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <p>Ці дані використовуються для демонстрації роботи декораторів: <code>validate</code>, <code>convert</code> , <code>clamp</code>.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Що перевіряємо</th>
+                <th>Ввод X</th>
+                <th>Ввод Y</th>
+                <th>Очікувана відповідь</th>
+                <th>Пояснення логіки</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Округлення</strong> (float_to_int)</td>
+                <td>5.9</td>
+                <td>10.9</td>
+                <td><strong>20</strong></td>
+                <td>Дробова частина відкидається (5 * 10 - 30)</td>
+            </tr>
+            <tr>
+                <td><strong>Максимум</strong> (clamp > 100)</td>
+                <td>20</td>
+                <td>10</td>
+                <td><strong>100</strong></td>
+                <td>Результат 170 обрізається до верхньої межі 100</td>
+            </tr>
+            <tr>
+                <td><strong>Мінімум</strong> (clamp < 0)</td>
+                <td>2</td>
+                <td>5</td>
+                <td><strong>0</strong></td>
+                <td>Результат -20 підтягується до нижньої межі 0</td>
+            </tr>
+            <tr>
+                <td><strong>Норма</strong> (Штатний режим)</td>
+                <td>8</td>
+                <td>10</td>
+                <td><strong>50</strong></td>
+                <td>Результат 50 входить у діапазон [0...100]</td>
+            </tr>
+            <tr>
+                <td><strong>Валідація</strong> (validate_numeric)</td>
+                <td>"abc"</td>
+                <td>5</td>
+                <td><span class="highlight">TypeError</span></td>
+                <td>Декоратор блокує виконання, бо "abc" не є числом</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
