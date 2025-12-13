@@ -3,22 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тестові дані для декораторів</title>
+    <title>Лабораторна робота: Декоратори</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px;
             background-color: #f9f9f9;
-        }
-        h2 {
             color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .task-card {
+            background-color: #fff;
+            padding: 20px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .task-card h2 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .task-list li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
         }
         table {
             width: 100%;
-            border-collapse: collapse; /* Прибирає подвійні рамки */
+            border-collapse: collapse;
             margin-top: 20px;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тінь для краси */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         th, td {
             border: 1px solid #ddd;
@@ -31,19 +53,37 @@
             font-weight: bold;
         }
         tr:nth-child(even) {
-            background-color: #f2f2f2; /* Смугасті рядки */
+            background-color: #f2f2f2;
         }
         tr:hover {
-            background-color: #e9e9e9; /* Підсвічування при наведенні */
+            background-color: #e9e9e9;
         }
         .highlight {
             font-weight: bold;
             color: #d32f2f;
         }
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
-    <p>Ці дані використовуються для демонстрації роботи декораторів: <code>validate</code>, <code>convert</code> , <code>clamp</code>.</p>
+
+    <div class="task-card">
+        <h2> Умова задачі (8.29)</h2>
+        <ul class="task-list">
+            <li><strong>Завдання 1:</strong> Декоратор, що модифікує функцію так, щоб її значення потрапляло у заданий проміжок (<code>clamp_result</code>).</li>
+            <li><strong>Завдання 2:</strong> Декоратор, що перевіряє аргументи функцій (<code>validate_numeric</code>).</li>
+            <li><strong>Завдання 3:</strong> Декоратор, що модифікує дійсні аргументи функцій цілими (<code>float_to_int</code>).</li>
+        </ul>
+    </div>
+
+    <h2> Тестові сценарії (Test Cases)</h2>
+    <p>Ці дані використовуються для демонстрації роботи декораторів: <code>validate</code>, <code>convert</code>, <code>clamp</code>.</p>
+
     <table>
         <thead>
             <tr>
