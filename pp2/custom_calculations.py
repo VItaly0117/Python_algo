@@ -23,7 +23,9 @@ def calculate_formula(n, r, pi=3.141592653589793, precision=10):
 
     power_2r = (2 * r) ** n
     power_pi = (pi / 2) ** (n // 2)
+    #
     dfactorial = double_factorial(n)
+
 
     if dfactorial == 0:
         print("Помилка: Подвійний факторіал від нуля не визначений у знаменнику.")
@@ -31,6 +33,9 @@ def calculate_formula(n, r, pi=3.141592653589793, precision=10):
 
     result = (power_2r * power_pi) / dfactorial
     return round(result, precision)
+
+# з обробкою виключень
+
 
 
 # --- Функції з zadasha2.py ---
