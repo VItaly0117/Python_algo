@@ -24,12 +24,12 @@ def run_task():
     delta, t_val = sl.get_confidence_interval(mean_val, std_err, n, alpha)
 
     print(f"Кількість вимірювань (n): {n}")
-    print(f"Вибіркове середнє (Xsr): {mean_val:.4f}")
-    print(f"Вибіркова дисперсія (S^2): {var:.6f}")
-    print(f"Середньоквадратичне відхилення (Sx): {std:.4f}")
-    print(f"Середньоквадратична похибка (Sigma X): {std_err:.4f}")
-    print(f"Коефіцієнт Стьюдента (t) для a={alpha}: {t_val:.4f}")
-    print(f"Довірчий інтервал (Delta X): {delta:.4f}")
+    print(f"Вибіркове середнє (Xsr): {mean_val:.3f}")
+    print(f"Вибіркова дисперсія (S^2): {var:.3f}")
+    print(f"Середньоквадратичне відхилення (Sx): {std:.3f}")
+    print(f"Середньоквадратична похибка (Sigma X): {std_err:.3f}")
+    print(f"Коефіцієнт Стьюдента (t) для a={alpha}: {t_val:.3f}")
+    print(f"Довірчий інтервал (Delta X): {delta:.3f}")
     print(f"Результат: ({mean_val:.3f} ± {delta:.3f}) * 10^-10 од. СГСЕ")
 
     cgse_to_coulomb = 3.33564e-10
