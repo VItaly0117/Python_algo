@@ -40,8 +40,11 @@ def run_task():
 
     print(f"\nУ системі СІ: ({mean_si:.3e} ± {delta_si:.3e}) Кл")
 
+    sturges_bins = int(1 + 3.322 * np.log10(n))
+    print(f"\nКількість інтервалів гістограми (формула Стерджеса): {sturges_bins}")
+
     plt.figure(figsize=(10, 6))
-    count, bins, ignored = plt.hist(data, bins=10, density=True, alpha=0.6, color='g', edgecolor='black',
+    count, bins, ignored = plt.hist(data, bins=sturges_bins, density=True, alpha=0.6, color='g', edgecolor='black',
                                     label='Експеримент')
 
     xmin, xmax = plt.xlim()
@@ -49,7 +52,7 @@ def run_task():
     p = sl.gaussian_func(x, mean_val, std)
     plt.plot(x, p, 'k', linewidth=2, label='Нормальний закон')
 
-    plt.title('Гістограма розподілу заряду (Завдання 1.1)')
+    plt.title(f'Гістограма розподілу заряду (n={n}, bins={sturges_bins})')
     plt.xlabel('Заряд (од. * 10^-10)')
     plt.ylabel('Густина ймовірності')
     plt.legend()
