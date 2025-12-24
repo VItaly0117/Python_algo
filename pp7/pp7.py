@@ -32,7 +32,7 @@ try:
     plt.plot(x_values, y_values,
              color='blue',
              linestyle='-',
-             label='y = x * cos(x)')
+             label='y = x * sin(x)')
     # --- 5. Налаштування вигляду графіка ---
     plt.title('Графік функції')  # Назва графіка
     plt.xlabel('Вісь X')  # Підпис осі X

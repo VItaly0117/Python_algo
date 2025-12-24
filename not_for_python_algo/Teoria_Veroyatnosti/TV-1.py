@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 # --- ВХІДНІ ---
-x = [6, 5, 6, 9, 8, 7, 10, 5, 4, 9, 7, 6, 5, 8, 7, 9, 6, 9, 11, 6]
+x = [6,11,9,6,9,7,8,5,6,7,9,4,5,10,7,8,9,6,5,6]
 n = len(x)
 
 # --- ВАРІАЦІЙНИЙ РЯД ---

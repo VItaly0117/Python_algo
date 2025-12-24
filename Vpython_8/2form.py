@@ -22,3 +22,5 @@ spring = helix(pos=vector(-5, 0, 0),
 # Добавим шарики на концы
 ball_start = sphere(pos=spring.pos, radius=0.2, color=color.blue)
 ball_end = sphere(pos=spring.pos + spring.axis, radius=0.2, color=color.blue)
+
+input("")
